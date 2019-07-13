@@ -1,0 +1,2 @@
+;;; -*- no-byte-compile: t -*-
+(define-package "term-projectile" "0.1.1" "projectile terminal management" '((term-manager "0.1.0") (projectile "0.13.0")) :commit "0bca2e7e3b6e906ec67696bc0be952988ca7f733" :keywords '("term" "manager" "projectile") :authors '(("Ivan Malison" . "IvanMalison@gmail.com")) :maintainer '("Ivan Malison" . "IvanMalison@gmail.com") :url "https://www.github.com/IvanMalison/term-projectile")

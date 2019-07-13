@@ -1,0 +1,148 @@
+;; init.el --- Emacs configuration
+
+;; INSTALL PACKAGES
+;; --------------------------------------
+
+(require 'package)
+
+(add-to-list 'package-archives
+	     '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives
+       '("gnu" . "http://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives
+       '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives
+       '("elpy" . "https://jorgenschaefer.github.io/packages/") t)
+
+(package-initialize)
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+(defvar myPackages
+  '(better-defaults
+    exec-path-from-shell
+    auto-complete
+    jedi
+    python-mode
+    py-autopep8))
+
+(mapc #'(lambda (package)
+    (unless (package-installed-p package)
+      (package-install package)))
+      myPackages)
+
+;; BASIC CUSTOMIZATION
+;; --------------------------------------
+
+;;(setq inhibit-startup-message t) ;; hide the startup message
+(load-theme 'material t) ;; load material theme
+(global-linum-mode t) ;; enable line numbers globally
+(setq linum-format "%4d \u2502 ")  ;;
+
+(helm-mode +1)
+(global-set-key (kbd "M-x") #'helm-M-x)
+(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
+
+
+
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+(setq projectile-project-search-path '("~/workspace/" "~/"))
+
+;; use flycheck not flymake with elpy
+;;(when (require 'flycheck nil t
+;;  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;;  (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+;; enable autopep8 formatting on save
+;;(require 'py-autopep8)
+;;(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+;;
+;;(add-hook 'python-mode-hook #'lsp)
+
+;; PYTHON CONFIGURATION
+;; --------------------------------------------
+(use-package lsp-mode
+  :ensure t
+  :config
+
+  ;; make sure we have lsp-imenu everywhere we have LSP
+;;  (require 'lsp-imenu)
+;;  (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)OB  
+  ;; get lsp-python-enable defined
+  ;; NB: use either projectile-project-root or ffip-get-project-root-directory
+  ;;     or any other function that can be used to find the root directory of a project
+;;  (lsp-define-stdio-client lsp-python "python"
+ ;;                          #'projectile-project-root
+ ;;                          '("pyls"))
+  ;; make sure this is activated when python-mode is activated
+  ;; lsp-python-enable is created by macro above 
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (lsp-python-enable)))
+
+  ;; lsp extras
+  (use-package lsp-ui
+    :ensure t
+    :config
+    (setq lsp-ui-sideline-ignore-duplicate t)
+    (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+
+  (use-package company-lsp
+    :config
+    (push 'company-lsp company-backends))
+
+  ;; NB: only required if you prefer flake8 instead of the default
+  ;; send pyls config via lsp-after-initialize-hook -- harmless for
+  ;; other servers due to pyls key, but would prefer only sending this
+  ;; when pyls gets initialised (:initialize function in
+  ;; lsp-define-stdio-client is invoked too early (before server
+  ;; start)) -- cpbotha
+  (defun lsp-set-cfg ()
+    (let ((lsp-cfg `(:pyls (:configurationSources ("flake8")))))
+      ;; TODO: check lsp--cur-workspace here to decide per server / project
+      (lsp--set-configuration lsp-cfg)))
+
+  (add-hook 'lsp-after-initialize-hook 'lsp-set-cfg))
+
+
+
+
+(use-package lsp-python-ms
+  :ensure nil
+  :hook (python-mode . lsp)
+  :config
+
+  ;; for executable of language server
+  (setq lsp-python-ms-executable
+        "~/.local/bin/Microsoft.Python.LanguageServer"))
+    
+
+
+
+;; init.el ends here
+
+
+
+
+
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-hidden-regexps (quote ("\\`elpy")))
+ '(package-selected-packages
+   (quote
+    (helm lsp-python term-projectile projectile-extras ## web-mode anaconda-mode magit jedi py-autopep8 use-package projectile-variable projectile-trailblazer projectile-speedbar projectile-sift projectile-ripgrep projectile-rails projectile-hanami projectile-git-autofetch projectile-direnv projectile-codesearch material-theme flycheck elpygen elpy better-defaults))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

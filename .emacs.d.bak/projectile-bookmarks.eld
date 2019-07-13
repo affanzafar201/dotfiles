@@ -1,0 +1,1 @@
+("~/workspace/calm/" "~/powerlevel9k/" "~/movie-reviews/" "~/kafka-docker/" "~/dotfiles/" "~/.oh-my-zsh/" "~/workspace/python-language-server/" "~/workspace/main/" "~/workspace/cloud/" "~/workspace/calm-ui/" "~/.emacs.d/elpa/jedi-core-20181207.1/" "~/workspace/calm/.go/src/github.com/dgrijalva/jwt-go/")
