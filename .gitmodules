@@ -40,3 +40,9 @@
 [submodule ".vim/pack/themes/start/nord"]
 	path = .vim/pack/themes/start/nord
 	url = https://github.com/arcticicestudio/nord-vim
+[submodule ".vim/pack/themes/start/solarized"]
+	path = .vim/pack/themes/start/solarized
+	url = https://github.com/altercation/vim-colors-solarized.git
+[submodule ".vim/pack/themes/start/iceberg"]
+	path = .vim/pack/themes/start/iceberg
+	url = https://github.com/cocopon/iceberg.vim.git
